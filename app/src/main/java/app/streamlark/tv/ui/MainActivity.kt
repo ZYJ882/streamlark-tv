@@ -64,6 +64,9 @@ class MainActivity : AppCompatActivity() {
         ))
 
         content.addView(createBrandBlock())
+        content.addView(createFeedEntry(), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, dp(46)
+        ).apply { topMargin = dp(16) })
         content.addView(createSearchField(), LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, dp(54)
         ).apply { topMargin = dp(22) })
@@ -131,6 +134,30 @@ class MainActivity : AppCompatActivity() {
             }
             addView(title)
             addView(subtitle)
+        }
+    }
+
+    private fun createFeedEntry(): TextView = TextView(this).apply {
+        text = "▶  开始沉浸刷流"
+        textSize = 17f
+        gravity = Gravity.CENTER
+        isFocusable = true
+        isFocusableInTouchMode = true
+        setTextColor(getColorCompat(R.color.lark_background))
+        setPadding(dp(20), 0, dp(20), 0)
+        background = roundedDrawable(getColorCompat(R.color.lark_accent), dp(12))
+        setOnClickListener {
+            startActivity(Intent(this@MainActivity, ImmersiveFeedActivity::class.java))
+        }
+        onFocusChangeListener = View.OnFocusChangeListener { view, focused ->
+            view.background = roundedDrawable(
+                getColorCompat(R.color.lark_accent),
+                dp(12),
+                if (focused) getColorCompat(R.color.lark_focus) else Color.TRANSPARENT,
+                if (focused) dp(2) else 0
+            )
+            view.animate().scaleX(if (focused) 1.04f else 1f).scaleY(if (focused) 1.04f else 1f)
+                .setDuration(120L).start()
         }
     }
 

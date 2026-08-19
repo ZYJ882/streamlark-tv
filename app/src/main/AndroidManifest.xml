@@ -23,6 +23,11 @@
         android:usesCleartextTraffic="false">
 
         <activity
+            android:name=".ui.ImmersiveFeedActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize"
+            android:exported="false"
+            android:theme="@style/Theme.StreamLark.Player" />
+        <activity
             android:name=".ui.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize"
             android:exported="false"
