@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lark_background">#10131B</color>
+    <color name="lark_surface">#1A2030</color>
+    <color name="lark_surface_elevated">#262F43</color>
+    <color name="lark_accent">#86E6C5</color>
+    <color name="lark_accent_dark">#2D8A6D</color>
+    <color name="lark_text_primary">#F4F7FF</color>
+    <color name="lark_text_secondary">#B8C1D7</color>
+    <color name="lark_focus">#FFFFFF</color>
+    <color name="lark_scrim">#B810131B</color>
+    <color name="lark_error">#FFB4AB</color>
+</resources>

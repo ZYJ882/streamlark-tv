@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_padding">48dp</dimen>
+    <dimen name="section_spacing">28dp</dimen>
+    <dimen name="card_width">248dp</dimen>
+    <dimen name="card_height">150dp</dimen>
+    <dimen name="card_gap">18dp</dimen>
+    <dimen name="focus_stroke">3dp</dimen>
+    <dimen name="hero_height">224dp</dimen>
+</resources>

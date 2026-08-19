@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.StreamLark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">@color/lark_accent</item>
+        <item name="android:navigationBarColor">@color/lark_surface</item>
+        <item name="android:statusBarColor">@color/lark_background</item>
+        <item name="android:windowBackground">@color/lark_background</item>
+    </style>
+
+    <style name="Theme.StreamLark.Player" parent="Theme.StreamLark">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
