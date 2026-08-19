@@ -15,4 +15,9 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.StreamLark.Launch" parent="Theme.StreamLark">
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
