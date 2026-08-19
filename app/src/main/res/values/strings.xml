@@ -15,6 +15,16 @@
     <string name="start_over">从头播放</string>
     <string name="back">返回</string>
     <string name="demo_notice">当前展示的是本地演示内容。外部服务将通过经授权的 Provider 接入。</string>
+    <string name="douyin_login_entry">抖音官方授权登录</string>
+    <string name="douyin_login_title">登录抖音账号</string>
+    <string name="douyin_login_subtitle">使用抖音官方 OAuth 授权，不输入密码，不上传 Cookie</string>
+    <string name="douyin_open_authorization">打开抖音官方授权页</string>
+    <string name="douyin_logout">退出当前登录</string>
+    <string name="douyin_not_logged_in">当前未登录抖音账号</string>
+    <string name="douyin_logged_in">当前已登录：%1$s</string>
+    <string name="douyin_logged_in_short">抖音已登录：%1$s</string>
+    <string name="douyin_user_default">已授权用户</string>
+    <string name="douyin_login_security_note">正式接入前，需要在抖音开放平台创建并上线移动应用，配置 client_key、回调地址和授权范围，并由服务端完成 auth_code 到 access_token 的交换。客户端不会保存抖音密码、浏览器 Cookie 或私有接口令牌。</string>
     <string name="player_error">媒体暂时无法播放，请稍后重试。</string>
     <string name="pip_unavailable">此设备不支持画中画，已保留全屏播放。</string>
     <string name="content_not_found">内容不存在或已下线。</string>

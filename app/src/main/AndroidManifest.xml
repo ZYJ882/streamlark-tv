@@ -23,6 +23,9 @@
         android:usesCleartextTraffic="false">
 
         <activity
+            android:name=".ui.DouyinLoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.LibraryActivity"
             android:exported="false" />
         <activity

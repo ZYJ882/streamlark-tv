@@ -18,6 +18,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.streamlark.tv.R
+import app.streamlark.tv.auth.DouyinAuthStore
 import app.streamlark.tv.data.FeedProviderRegistry
 import app.streamlark.tv.data.LibraryStore
 import app.streamlark.tv.model.ContentCategory
@@ -26,6 +27,7 @@ import app.streamlark.tv.model.VideoItem
 class MainActivity : AppCompatActivity() {
 
     private lateinit var libraryStore: LibraryStore
+    private lateinit var douyinAuthStore: DouyinAuthStore
     private lateinit var featuredAdapter: ContentCardAdapter
     private lateinit var recentAdapter: ContentCardAdapter
     private lateinit var contentAdapter: ContentCardAdapter
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryStore = LibraryStore(this)
+        douyinAuthStore = DouyinAuthStore(this)
         buildScreen()
     }
 
@@ -68,6 +71,9 @@ class MainActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT, dp(46)
         ).apply { topMargin = dp(16) })
         content.addView(createLibraryEntry(), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, dp(42)
+        ).apply { topMargin = dp(12) })
+        content.addView(createDouyinLoginEntry(), LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, dp(42)
         ).apply { topMargin = dp(12) })
         content.addView(createSearchField(), LinearLayout.LayoutParams(
@@ -178,6 +184,30 @@ class MainActivity : AppCompatActivity() {
         setOnClickListener {
             startActivity(Intent(this@MainActivity, LibraryActivity::class.java))
         }
+        onFocusChangeListener = View.OnFocusChangeListener { view, focused ->
+            view.background = roundedDrawable(
+                getColorCompat(R.color.lark_surface_elevated),
+                dp(12),
+                if (focused) getColorCompat(R.color.lark_accent) else Color.TRANSPARENT,
+                if (focused) dp(2) else 0
+            )
+        }
+    }
+
+    private fun createDouyinLoginEntry(): TextView = TextView(this).apply {
+        text = if (douyinAuthStore.isLoggedIn) {
+            getString(R.string.douyin_logged_in_short, douyinAuthStore.displayName ?: getString(R.string.douyin_user_default))
+        } else {
+            getString(R.string.douyin_login_entry)
+        }
+        textSize = 16f
+        gravity = Gravity.CENTER
+        isFocusable = true
+        isFocusableInTouchMode = true
+        setTextColor(getColorCompat(R.color.lark_text_primary))
+        setPadding(dp(18), 0, dp(18), 0)
+        background = roundedDrawable(getColorCompat(R.color.lark_surface), dp(12))
+        setOnClickListener { startActivity(Intent(this@MainActivity, DouyinLoginActivity::class.java)) }
         onFocusChangeListener = View.OnFocusChangeListener { view, focused ->
             view.background = roundedDrawable(
                 getColorCompat(R.color.lark_surface_elevated),
