@@ -13,7 +13,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import app.streamlark.tv.R
-import app.streamlark.tv.data.DemoCatalog
+import app.streamlark.tv.data.FeedProviderRegistry
 import app.streamlark.tv.data.LibraryStore
 import app.streamlark.tv.model.VideoItem
 
@@ -25,7 +25,8 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        video = DemoCatalog.find(intent.getStringExtra(EXTRA_VIDEO_ID)) ?: run {
+        video = FeedProviderRegistry.active().loadInitial()
+            .firstOrNull { it.id == intent.getStringExtra(EXTRA_VIDEO_ID) } ?: run {
             finish()
             return
         }
@@ -69,6 +70,9 @@ class DetailActivity : AppCompatActivity() {
         body.addView(actionRow, LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply { topMargin = dp(28) })
+        body.addView(createCommunityActions(), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = dp(14) })
 
         body.addView(createProgressHint(), LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -171,6 +175,25 @@ class DetailActivity : AppCompatActivity() {
             .setDuration(120L).start()
     }
 
+    private fun createCommunityActions(): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val provider = FeedProviderRegistry.active()
+        val profile = provider.profileFor(video)
+        if (profile != null) {
+            row.addView(createActionButton("查看创作者", false) { openProfile(profile.id) },
+                LinearLayout.LayoutParams(dp(170), dp(48)).apply { marginEnd = dp(14) })
+            val collection = provider.collectionsFor(profile.id).firstOrNull()
+            if (collection != null) {
+                row.addView(createActionButton("查看合集", false) { openCollection(collection.id) },
+                    LinearLayout.LayoutParams(dp(150), dp(48)))
+            }
+        }
+        return row
+    }
+
     private fun createProgressHint(): TextView {
         val savedPosition = libraryStore.progressFor(video.id)
         val text = if (savedPosition > 0) {
@@ -208,6 +231,15 @@ class DetailActivity : AppCompatActivity() {
 
     private fun openPlayer() {
         startActivity(Intent(this, PlayerActivity::class.java).putExtra(PlayerActivity.EXTRA_VIDEO_ID, video.id))
+    }
+
+    private fun openProfile(profileId: String) {
+        startActivity(Intent(this, ProfileActivity::class.java).putExtra(ProfileActivity.EXTRA_PROFILE_ID, profileId))
+    }
+
+    private fun openCollection(collectionId: String) {
+        startActivity(Intent(this, CollectionActivity::class.java)
+            .putExtra(CollectionActivity.EXTRA_COLLECTION_ID, collectionId))
     }
 
     private fun formatTime(positionMs: Long): String {

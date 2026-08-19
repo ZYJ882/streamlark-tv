@@ -23,6 +23,15 @@
         android:usesCleartextTraffic="false">
 
         <activity
+            android:name=".ui.LibraryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.CollectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.ImmersiveFeedActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize"
             android:exported="false"

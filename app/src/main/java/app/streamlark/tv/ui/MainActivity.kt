@@ -18,7 +18,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.streamlark.tv.R
-import app.streamlark.tv.data.DemoCatalog
+import app.streamlark.tv.data.FeedProviderRegistry
 import app.streamlark.tv.data.LibraryStore
 import app.streamlark.tv.model.ContentCategory
 import app.streamlark.tv.model.VideoItem
@@ -67,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         content.addView(createFeedEntry(), LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, dp(46)
         ).apply { topMargin = dp(16) })
+        content.addView(createLibraryEntry(), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, dp(42)
+        ).apply { topMargin = dp(12) })
         content.addView(createSearchField(), LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, dp(54)
         ).apply { topMargin = dp(22) })
@@ -76,7 +79,9 @@ class MainActivity : AppCompatActivity() {
 
         content.addView(createSectionTitle(getString(R.string.featured)), sectionTitleParams())
         val featuredRow = createContentRow().also { row ->
-            featuredAdapter = ContentCardAdapter(::openDetail).also { it.submitList(DemoCatalog.all.take(6)) }
+            featuredAdapter = ContentCardAdapter(::openDetail).also {
+                it.submitList(FeedProviderRegistry.active().loadInitial().take(6))
+            }
             row.adapter = featuredAdapter
         }
         content.addView(featuredRow, rowParams())
@@ -158,6 +163,28 @@ class MainActivity : AppCompatActivity() {
             )
             view.animate().scaleX(if (focused) 1.04f else 1f).scaleY(if (focused) 1.04f else 1f)
                 .setDuration(120L).start()
+        }
+    }
+
+    private fun createLibraryEntry(): TextView = TextView(this).apply {
+        text = "☆  我的收藏与历史"
+        textSize = 16f
+        gravity = Gravity.CENTER
+        isFocusable = true
+        isFocusableInTouchMode = true
+        setTextColor(getColorCompat(R.color.lark_text_primary))
+        setPadding(dp(18), 0, dp(18), 0)
+        background = roundedDrawable(getColorCompat(R.color.lark_surface), dp(12))
+        setOnClickListener {
+            startActivity(Intent(this@MainActivity, LibraryActivity::class.java))
+        }
+        onFocusChangeListener = View.OnFocusChangeListener { view, focused ->
+            view.background = roundedDrawable(
+                getColorCompat(R.color.lark_surface_elevated),
+                dp(12),
+                if (focused) getColorCompat(R.color.lark_accent) else Color.TRANSPARENT,
+                if (focused) dp(2) else 0
+            )
         }
     }
 
@@ -295,13 +322,18 @@ class MainActivity : AppCompatActivity() {
     )
 
     private fun refreshContent() {
-        val filtered = DemoCatalog.query(currentQuery, selectedCategory)
+        val provider = FeedProviderRegistry.active()
+        val catalog = provider.loadInitial()
+        val filtered = provider.search(currentQuery).filter { item ->
+            selectedCategory == null || item.category == selectedCategory
+        }
         contentAdapter.submitList(filtered)
         featuredAdapter.submitList(
-            DemoCatalog.all.filter { selectedCategory == null || it.category == selectedCategory }.take(6)
+            catalog.filter { selectedCategory == null || it.category == selectedCategory }.take(6)
         )
-        recentAdapter.submitList(libraryStore.recent(DemoCatalog.all))
-        recentSection.visibility = if (libraryStore.recent(DemoCatalog.all).isEmpty()) View.GONE else View.VISIBLE
+        val recent = libraryStore.recent(catalog)
+        recentAdapter.submitList(recent)
+        recentSection.visibility = if (recent.isEmpty()) View.GONE else View.VISIBLE
 
         contentHeading.text = if (currentQuery.isBlank() && selectedCategory == null) {
             getString(R.string.all_content)

@@ -19,7 +19,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import app.streamlark.tv.R
-import app.streamlark.tv.data.DemoCatalog
+import app.streamlark.tv.data.FeedProviderRegistry
 import app.streamlark.tv.data.LibraryStore
 import app.streamlark.tv.model.VideoItem
 
@@ -34,7 +34,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        video = DemoCatalog.find(intent.getStringExtra(EXTRA_VIDEO_ID))
+        video = FeedProviderRegistry.active().loadInitial()
+            .firstOrNull { it.id == intent.getStringExtra(EXTRA_VIDEO_ID) }
         if (video == null) {
             finish()
             return
@@ -209,7 +210,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun changeVideo(offset: Int) {
         val current = video ?: return
-        val all = DemoCatalog.all
+        val all = FeedProviderRegistry.active().loadInitial()
         val currentIndex = all.indexOfFirst { it.id == current.id }
         if (currentIndex < 0) return
         releasePlayer()

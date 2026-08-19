@@ -2,4 +2,7 @@
 <resources>
     <item name="card_title" type="id" />
     <item name="card_subtitle" type="id" />
+    <item name="collection_badge" type="id" />
+    <item name="collection_title" type="id" />
+    <item name="collection_subtitle" type="id" />
 </resources>

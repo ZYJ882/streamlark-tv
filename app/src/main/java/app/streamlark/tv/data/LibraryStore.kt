@@ -34,6 +34,11 @@ class LibraryStore(context: Context) {
             .apply()
     }
 
+    fun favoriteItems(catalog: List<VideoItem>): List<VideoItem> {
+        val favoriteIds = favorites()
+        return catalog.filter { it.id in favoriteIds }
+    }
+
     fun recent(catalog: List<VideoItem>, limit: Int = 8): List<VideoItem> {
         return catalog
             .mapNotNull { item ->
